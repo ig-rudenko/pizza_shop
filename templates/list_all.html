@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Купи Пиццу{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+          <h3>Че смотришь? Заказывай!</h3>
+          <p>Здесь ты можешь посмотреть на картинки пицц, либо поступить умнее и заказать.</p>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        {% for pizza in pizzas %}
+        <div class="col-md-3">
+          <div class="card shadow">
+            <a class="card" href="{% url 'show-pizza' pizza.id %}">
+                <img height="100%" src="{{ pizza.image.url }}" class="rounded">
+            </a>
+            <div class="text-center card-body">
+                <h2>{{ pizza.name }}
+                    {% if pizza.hot %}
+                        <i style="color: #dc3545" class="fa-pepper-hot fa"></i>
+                    {% elif pizza.vegan %}
+                        <i style="color: forestgreen" class="fa fa-leaf"></i>
+                    {% endif %}
+                </h2>
+                <h2 class="card-title pricing-card-title">{{ pizza.cost }} ₽</h2>
+              <div class="card-text">
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

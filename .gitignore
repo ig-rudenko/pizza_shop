@@ -1,0 +1,5 @@
+*/migrations/\d*
+static/admin
+venv
+.idea
+images

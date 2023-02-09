@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ pizza.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row pt-3">
+        <div class="col-12 col-md-5">
+            <div class="img-wrp">
+                <img src="{{ pizza.image.url }}" class="img-fluid mb-5 rounded">
+            </div>
+        </div>
+        <div class="text-center col-12 col-md-7">
+            <h1 class="mt-0 mb-4">
+                {{ pizza.name | upper }}
+                    {% if pizza.hot %}
+                        <i style="color: #dc3545" class="fa-pepper-hot fa"></i>
+                    {% elif pizza.vegan %}
+                        <i style="color: forestgreen" class="fa fa-leaf"></i>
+                    {% endif %}
+            </h1>
+
+            <h5>{{ pizza.about | linebreaks }}</h5>
+
+            <form action="{% url 'add-pizza' pizza.id %}" method="post">
+                {% csrf_token %}
+                <div class="py-3">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                      <input type="radio" value="20" class="btn-check" name="diameter" id="diameter1" autocomplete="off" checked>
+                        <label class="btn btn-outline-success" for="diameter1"><h5>Ø 20</h5></label>
+
+                      <input type="radio" value="25" class="btn-check" name="diameter" id="diameter2" autocomplete="off">
+                        <label class="btn btn-outline-success" for="diameter2"><h5>Ø 25</h5></label>
+
+                      <input type="radio" value="30" class="btn-check" name="diameter" id="diameter3" autocomplete="off">
+                        <label class="btn btn-outline-success" for="diameter3"><h5>Ø 30</h5></label>
+
+                      <input type="radio" value="50" class="btn-check" name="diameter" id="diameter4" autocomplete="off">
+                        <label class="btn btn-outline-success" for="diameter4"><h5>Ø 50</h5></label>
+                    </div>
+                </div>
+
+
+                <div class="py-4 item-price text-success col-12 col-md-12">
+                    <h1><span id="total-cost">{{ pizza.cost }}</span> ₽</h1>
+                </div>
+
+                <div id="pizzas-count-img">
+                    <img height="50px" src="{% static 'img/pizza.png' %}">
+                </div>
+
+                <div class="py-1">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+
+                      {# - #}
+                      <button type="button" id="remove_pizza" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"></path>
+                        </svg>
+                      </button>
+
+                      <input id="count" type="radio" value="1" class="btn-check" name="count" id="count" autocomplete="off" checked>
+                      <label class="btn btn-outline-light" style="padding: 10px 20px" for="count1">
+                          <span class="display-6" id="count-vis">1</span>
+                      </label>
+
+                      {# + #}
+                      <button type="button" id="add_pizza" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"></path>
+                        </svg>
+                      </button>
+
+                    </div>
+                </div>
+
+                <div class="py-3">
+                    <button type="submit" class="btn btn-warning mt-3 mt-lg-0 mt-md-0 waves-effect waves-light">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="me-2" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"></path>
+                          <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"></path>
+                        </svg>
+                        В корзину
+                    </button>
+                </div>
+
+            </form>
+        </div>
+	</div>
+</div>
+
+<script>
+const BASE_COST = {{ pizza.cost }};
+const BASE_DIAMETER = 20;
+
+let COST = {{ pizza.cost }};
+let COUNT = 1
+
+let COUNT_OBJ = document.getElementById("count")
+let COUNT_VIS = document.getElementById("count-vis")
+let TOTAL_COST = document.getElementById("total-cost")
+let PIZZAS_IMG = document.getElementById("pizzas-count-img")
+
+function reset_total_cost() {
+    COUNT_OBJ.value = COUNT
+    COUNT_VIS.innerText = COUNT
+    PIZZAS_IMG.innerHTML = `<img height="50px" src="{% static 'img/pizza.png' %}">`.repeat(COUNT)
+    TOTAL_COST.innerText = String(Math.floor(COST * COUNT))
+}
+
+document.getElementById("add_pizza").addEventListener(
+    "click", function () {
+        if (COUNT <= 9) {
+            COUNT += 1;
+            reset_total_cost()
+        }
+    }
+)
+
+document.getElementById("remove_pizza").addEventListener(
+    "click", function () {
+        if (COUNT > 1) {
+            COUNT -= 1;
+            reset_total_cost()
+        }
+    }
+)
+
+document.querySelectorAll("input[name='diameter']").forEach(
+    el => {
+        el.addEventListener(
+            "click", function () {
+                if (['20', '25', '30', '50'].indexOf(this.value) >= 0){
+                    let k = this.value / BASE_DIAMETER
+                    COST = Math.round(BASE_COST * k)
+                    reset_total_cost()
+                }
+            }
+        )
+    }
+)
+
+</script>
+{% endblock %}
