@@ -61,7 +61,7 @@ class ShowCartView(View):
         if form.is_valid():
 
             for pizza_order in cart.create_objects().pizzas:
-                Orders.objects.create(
+                order = Orders.objects.create(
                     pizza=pizza_order,
                     count=pizza_order.count,
                     diameter=pizza_order.diameter,
@@ -70,8 +70,10 @@ class ShowCartView(View):
                     name=form.cleaned_data["name"],
                     payment=form.cleaned_data["payment"],
                 )
+                request.session["orders"].append(order.id)
 
             cart.clear()
+
             return render(request, "thanks.html")
 
         return render(request, "cart.html", {"cart": cart, "form": form})

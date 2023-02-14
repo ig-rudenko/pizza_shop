@@ -19,8 +19,11 @@ class PizzaCart:
         # Смотрим корзину пользователя self.session.get("cart")
         cart = self.session.get(self.key)
         if not cart:
-            # Если её еще нет
+            # Если её еще нет.
+            # Создаем корзину.
             cart = self.session[self.key] = {}
+            # Создаем список заказов
+            self.session["orders"] = []
 
         # Корзина
         self.cart = cart

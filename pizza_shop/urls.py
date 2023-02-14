@@ -19,6 +19,8 @@ from django.conf import settings
 from django.urls import path, include
 from goods import views
 
+# /
+
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -29,6 +31,9 @@ urlpatterns = [
     path("pizza/<int:pizza_id>", views.PizzaView.as_view(), name="show-pizza"),
     path("add/<int:pizza_id>", views.AddPizzaView.as_view(), name="add-pizza"),
     path("cart", views.ShowCartView.as_view(), name="show-cart"),
+
+    path("auth/", include("djoser.urls.authtoken"))
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
