@@ -17,12 +17,19 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
+
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView, TokenVerifyView
+
 from goods import views
 
 # /
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
     path("api/v0/", include("goods.api.v0.urls")),
     path("api/v1/", include("goods.api.v1.urls")),
@@ -31,8 +38,6 @@ urlpatterns = [
     path("pizza/<int:pizza_id>", views.PizzaView.as_view(), name="show-pizza"),
     path("add/<int:pizza_id>", views.AddPizzaView.as_view(), name="add-pizza"),
     path("cart", views.ShowCartView.as_view(), name="show-cart"),
-
-    path("auth/", include("djoser.urls.authtoken"))
 
 ]
 if settings.DEBUG:
