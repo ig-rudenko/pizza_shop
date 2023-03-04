@@ -1,5 +1,7 @@
 */migrations/\d*
 static/admin
+static/rest_framework
 venv
 .idea
 images
+db.sqlite3
