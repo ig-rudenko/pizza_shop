@@ -1,0 +1,57 @@
+version: "3.9"
+
+
+services:
+
+
+  mysql-db:
+
+    image: mysql
+    volumes:
+      - "./mysql-data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: pizza_db
+      MYSQL_USER: pizza_user
+      MYSQL_PASSWORD: pizza
+
+
+  django-migrations:
+    build: .
+    image: pizza_shop:v0.5
+    command: migrate
+    depends_on:
+      - mysql-db
+
+
+  django-create-user:
+    build: .
+    image: pizza_shop:v0.5
+    environment:
+      DJANGO_SUPERUSER_EMAIL: admin@example.com
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: password
+
+    command: createsuperuser --noinput
+    depends_on:
+      - mysql-db
+
+
+  django-pizza:
+    image: pizza_shop:v0.5
+
+    command: runserver 0.0.0.0:8000
+
+    environment:
+      DJANGO_DEBUG: 1
+      DJANGO_SECRET_KEY: asdajsiodhjasopdfhoasdfjajsdjf;129371
+
+    ports:
+      - "8080:8000"
+
+    volumes:
+      - "./static:/app/static:ro"
+      - "./media:/app/media"
+
+    depends_on:
+      - django-migrations

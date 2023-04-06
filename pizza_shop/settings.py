@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from celery.beat import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-secret-key")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-secret-key-123123123")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "1") == "1"
@@ -85,8 +87,12 @@ WSGI_APPLICATION = "pizza_shop.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "pizza_db",
+        "USER": "pizza_user",
+        "PASSWORD": "pizza",
+        "HOST": "mysql-db",
+        "PORT": 3306
     }
 }
 
@@ -188,3 +194,11 @@ SIMPLE_JWT = {
 CELERY_BROKER_URL = "redis://"
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_TASK_TRACK_STARTED = True
+
+CELERY_BEAT_SCHEDULE = {
+    "email": {
+        "task": "goods.tasks.some_func",
+        "args": ("PERIOD!", 0.1),
+        "schedule": 5 #crontab(minute="*/10")
+    }
+}

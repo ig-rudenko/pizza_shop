@@ -3,3 +3,4 @@ Pillow
 djangorestframework~=3.14.0
 djangorestframework-simplejwt
 django-debug-toolbar
+celery

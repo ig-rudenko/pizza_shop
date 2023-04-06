@@ -5,3 +5,5 @@ venv
 .idea
 images
 db.sqlite3
+mysql-data
+media
