@@ -18,7 +18,7 @@ class TestCart(test.TestCase):
             name="pizza1",
             about="nice pizza",
             cost=1000,
-            image=File(open(f"{settings.BASE_DIR}/manage.py", "rb"), "image_test.jpg")
+            image=File(open(f"{settings.BASE_DIR}/static/img/pizza.png", "rb"), "image_test.jpg")
         )
 
     def test_buy_pizza(self):
