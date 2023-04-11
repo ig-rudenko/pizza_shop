@@ -20,5 +20,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 EXPOSE 8000
-
-ENTRYPOINT ["python3", "manage.py"]
