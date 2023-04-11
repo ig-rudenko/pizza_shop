@@ -19,7 +19,7 @@ class TestAPICreatePizza(test.TestCase):
             name="pizza1",
             about="nice pizza",
             cost=1000,
-            image=File(open(f"{settings.BASE_DIR}/manage.py", "rb"), "image_test.py")
+            image=File(open(f"{settings.BASE_DIR}/manage.py", "rb"), "image_test.jpg")
         )
 
     def setUp(self) -> None:
@@ -50,7 +50,7 @@ class TestAPICreatePizza(test.TestCase):
                 "name": "pizza2",
                 "about": "nice pizza",
                 "cost": 999,
-                "image": SimpleUploadedFile("image_test.py", open(f"{settings.BASE_DIR}/manage.py", "rb").read())
+                "image": SimpleUploadedFile("image_test.jpg", open(f"{settings.BASE_DIR}/manage.py", "rb").read())
             },
             HTTP_AUTHORIZATION=f"Bearer {self.tokens.get('access')}"
         )
