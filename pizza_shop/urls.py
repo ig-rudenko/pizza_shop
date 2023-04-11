@@ -16,11 +16,13 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView, TokenVerifyView
 
 from goods import views
+from pizza_shop.swagger import schema_view
 
 # /
 
@@ -40,6 +42,13 @@ urlpatterns = [
     path("cart", views.ShowCartView.as_view(), name="show-cart"),
 
 ]
+
+# Документация API
+urlpatterns += [
+    path("swagger-ui/", TemplateView.as_view(template_name="swagger-ui.html"), name="swagger-ui"),
+    re_path(r"^swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json")
+]
+
 if settings.DEBUG:
     urlpatterns += [
         path('__debug__/', include('debug_toolbar.urls'))

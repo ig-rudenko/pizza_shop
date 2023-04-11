@@ -2,24 +2,23 @@ version: "3.9"
 
 services:
 
-  mysql-db:
+  database:
 
-    image: mysql
-    volumes:
-      - "./mysql-data:/var/lib/mysql"
+    image: postgres
+#    volumes:
+#      - "./pg-data:/var/lib/mysql"
 
     healthcheck:
-      test: "mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD"
+      test: "--health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5"
       start_period: 5s
       interval: 5s
       timeout: 10s
       retries: 3
 
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: pizza_db
-      MYSQL_USER: pizza_user
-      MYSQL_PASSWORD: pizza
+      POSTGRES_DB: pizza_db
+      POSTGRES_USER: pizza_user
+      POSTGRES_PASSWORD: pizza
 
   django-init:
     build: .
@@ -29,9 +28,9 @@ services:
       DJANGO_SUPERUSER_USERNAME: admin
       DJANGO_SUPERUSER_PASSWORD: password
 
-    command: python manage.py migrate && python manage.py createsuperuser --noinput
+    command: python manage.py test
     depends_on:
-      mysql-db:
+      database:
         condition: service_healthy
 
   redis-cache:

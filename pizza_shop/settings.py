@@ -87,12 +87,12 @@ WSGI_APPLICATION = "pizza_shop.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": "pizza_db",
         "USER": "pizza_user",
         "PASSWORD": "pizza",
-        "HOST": "mysql-db",
-        "PORT": 3306
+        "HOST": "localhost",
+        "PORT": 5432
     }
 }
 
