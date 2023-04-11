@@ -9,21 +9,19 @@ User = get_user_model()
 
 class TestCart(test.TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
+    def test_buy_pizza(self):
         user = User(username="user", email="user@mail", is_superuser=True)
         user.set_password("password")
         user.save()
-        Pizza.objects.create(
+        p = Pizza.objects.create(
             name="pizza1",
             about="nice pizza",
             cost=1000,
             image=File(open(f"{settings.BASE_DIR}/static/img/pizza.png", "rb"), "image_test.jpg")
         )
 
-    def test_buy_pizza(self):
         # Добавления пиццы в корзину
-        self.client.post("/add/1", {"count": 2, "diameter": 25})
+        self.client.post(f"/add/{p.id}", {"count": 2, "diameter": 25})
 
         print(self.client.session["cart"])
 
@@ -37,7 +35,7 @@ class TestCart(test.TestCase):
             }
         )
 
-        print(resp.status_code)
+        self.assertEqual(resp.status_code, 200)
 
         print(self.client.session["orders"])
 
