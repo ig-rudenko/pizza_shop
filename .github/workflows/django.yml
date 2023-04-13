@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  DOCKERHUB_IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   test:
 
