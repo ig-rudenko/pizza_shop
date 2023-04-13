@@ -9,7 +9,6 @@ User = get_user_model()
 
 
 class TestAPICreatePizza(test.TestCase):
-
     @classmethod
     def setUpTestData(cls):
         user = User(username="user", email="user@mail", is_superuser=True)
@@ -19,22 +18,14 @@ class TestAPICreatePizza(test.TestCase):
             name="pizza1",
             about="nice pizza",
             cost=1000,
-            image=File(open(f"{settings.BASE_DIR}/static/img/pizza.png", "rb"), "image_test.jpg")
+            image=File(open(f"{settings.BASE_DIR}/static/img/pizza.png", "rb"), "image_test.jpg"),
         )
 
     def setUp(self) -> None:
-        self.tokens = self.client.post(
-            "/api/token/",
-            {
-                "username": "user",
-                "password": "password"
-            }
-        ).json()
+        self.tokens = self.client.post("/api/token/", {"username": "user", "password": "password"}).json()
 
     def test_get_pizza_list(self):
-        resp = self.client.get(
-            "/api/v1/pizzas"
-        )
+        resp = self.client.get("/api/v1/pizzas")
 
         pizza = Pizza.objects.get(name="pizza1")
 
@@ -52,9 +43,9 @@ class TestAPICreatePizza(test.TestCase):
                 "cost": 999,
                 "image": SimpleUploadedFile(
                     "image_test.jpg", open(f"{settings.BASE_DIR}/static/img/pizza.png", "rb").read()
-                )
+                ),
             },
-            HTTP_AUTHORIZATION=f"Bearer {self.tokens.get('access')}"
+            HTTP_AUTHORIZATION=f"Bearer {self.tokens.get('access')}",
         )
 
         print(resp.json())

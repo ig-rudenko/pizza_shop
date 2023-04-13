@@ -41,7 +41,10 @@ class OrdersControlAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOrderOwner]
 
     def perform_update(self, serializer: OrdersSerializer):
-        if serializer.instance.datetime.timestamp() <= (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp():
+        if (
+            serializer.instance.datetime.timestamp()
+            <= (datetime.datetime.now() - datetime.timedelta(minutes=5)).timestamp()
+        ):
             serializer.save()
 
         raise ValidationError("Уже нельзя изменить заказ")

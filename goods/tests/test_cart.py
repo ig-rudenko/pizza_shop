@@ -8,11 +8,11 @@ User = get_user_model()
 
 
 class TestCart(test.TestCase):
-
     def test_buy_pizza(self):
         user = User(username="user", email="user@mail", is_superuser=True)
         user.set_password("password")
         user.save()
+
         p = Pizza.objects.create(
             name="pizza1",
             about="nice pizza",
@@ -31,8 +31,8 @@ class TestCart(test.TestCase):
                 "name": "user",
                 "phone": "123123123",
                 "address": "fajskdjfkl",
-                "payment": "card"
-            }
+                "payment": "card",
+            },
         )
 
         self.assertEqual(resp.status_code, 200)
