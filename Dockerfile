@@ -15,7 +15,7 @@ RUN apk add --update --no-cache mariadb-connector-c-dev \
 	&& pip install mysqlclient \
 	&& apk del .build-deps
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip --no-cache-dir && pip install -r requirements.txt --no-cache-dir;
 
 COPY . .
 
