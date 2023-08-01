@@ -22,11 +22,11 @@ class PizzaCart:
             # Если её еще нет.
             # Создаем корзину.
             cart = self.session[self.key] = {}
-            # Создаем список заказов
-            self.session["orders"] = []
 
         # Корзина
         self.cart = cart
+
+        self.orders = []
 
         # Будущий список пицц
         self.pizzas = []
@@ -63,6 +63,7 @@ class PizzaCart:
     def save(self):
         # Обновление сессии cart
         self.session[self.key] = self.cart
+        self.session["orders"] = self.orders
         # Отметить сеанс как "измененный", чтобы убедиться, что он сохранен
         self.session.modified = True
 

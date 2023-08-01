@@ -2,8 +2,10 @@ from django.db import models
 from django.core.validators import (
     MinLengthValidator,
 )
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.urls import reverse
+
+User = get_user_model()
 
 
 class Pizza(models.Model):
@@ -18,7 +20,7 @@ class Pizza(models.Model):
         return self.name
 
     @property
-    def diameters_cost(self):
+    def diameters_cost(self) -> list[dict]:
         return [
             {"diameter": "20", "price": int(self.cost)},
             {"diameter": "25", "price": int(self.cost * 25 / 20)},
@@ -37,7 +39,10 @@ class Orders(models.Model):
         (30, "30 см"),
         (50, "50 см"),
     )
-    PAYMENT_TYPE = (("card", "Картой"), ("money", "Наличкой"))
+    PAYMENT_TYPE = (
+        ("card", "Картой"),
+        ("money", "Наличкой"),
+    )
 
     pizza = models.ForeignKey(Pizza, related_name="orders", on_delete=models.CASCADE)
     phone = models.IntegerField()
@@ -50,9 +55,6 @@ class Orders(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     diameter = models.SmallIntegerField(choices=PIZZA_DIAMETERS)
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.cost = self.count * self.pizza.cost * (self.diameter / 20)
         return super().save(force_insert, force_update, using, update_fields)

@@ -19,7 +19,7 @@ def some_func(self: Task, value: str, delay: int) -> dict:
 
 @shared_task
 def logging(*args, **kwargs):
-    with open("text.txt", "w") as f:
+    with open("text.txt", "w", encoding="utf-8") as f:
         f.write(str(args) + " " + str(kwargs))
     print(args)
     print(kwargs)

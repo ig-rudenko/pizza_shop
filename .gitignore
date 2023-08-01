@@ -1,9 +1,13 @@
 */migrations/\d*
 static/admin
 static/rest_framework
+static/debug_toolbar
 venv
+.venv
+.coverage
 .idea
 images
 db.sqlite3
 mysql-data
 media
+test*.py

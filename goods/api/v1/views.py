@@ -2,7 +2,7 @@ import datetime
 
 from rest_framework.exceptions import ValidationError
 
-from rest_framework import generics, permissions
+from rest_framework import generics
 
 from .serializers import OrdersSerializer, PizzaSerializer
 from ...models import Pizza, Orders

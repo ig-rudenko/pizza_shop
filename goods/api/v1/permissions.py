@@ -17,8 +17,8 @@ class IsSuperUser(BasePermission):
 
 class IsOrderOwner(BasePermission):
 
-    def has_object_permission(self, request, view, order):
-        if order.id in request.session.get("orders"):
+    def has_object_permission(self, request, view, obj):
+        if obj.id in request.session.get("orders"):
             # Если заказ, который мы хотим посмотреть находится в списке наших,
             # то можно с ним работать
             return True
