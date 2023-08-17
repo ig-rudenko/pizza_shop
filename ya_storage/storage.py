@@ -1,7 +1,7 @@
 import os
 
 import requests as requests
-from django.core.files.storage.base import Storage
+from django.core.files.storage import Storage
 
 
 # Создаем класс YandexDiskStorage, который наследует от базового класса Storage
