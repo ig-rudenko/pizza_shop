@@ -4,15 +4,21 @@ from django.core.validators import (
 )
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.conf import settings
+from django.core.files.storage import Storage
 
 from ya_storage.storage import yandex_disk_storage
 
 User = get_user_model()
 
 
+def get_storage() -> Storage:
+    return settings.DEFAULT_FILE_STORAGE if settings.DEBUG else yandex_disk_storage
+
+
 class Pizza(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to="pizza/", storage=yandex_disk_storage)
+    image = models.ImageField(upload_to="pizza/", storage=get_storage)
     cost = models.IntegerField()
     about = models.TextField()
     hot = models.BooleanField(default=False)
