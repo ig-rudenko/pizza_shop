@@ -5,7 +5,7 @@ from django.core.validators import (
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.conf import settings
-from django.core.files.storage import Storage
+from django.core.files.storage import FileSystemStorage, Storage
 
 from ya_storage.storage import yandex_disk_storage
 
@@ -13,7 +13,7 @@ User = get_user_model()
 
 
 def get_storage() -> Storage:
-    return settings.DEFAULT_FILE_STORAGE if settings.DEBUG else yandex_disk_storage
+    return FileSystemStorage() if settings.DEBUG else yandex_disk_storage
 
 
 class Pizza(models.Model):
