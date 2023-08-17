@@ -5,12 +5,14 @@ from django.core.validators import (
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+from ya_storage.storage import yandex_disk_storage
+
 User = get_user_model()
 
 
 class Pizza(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to="pizza/")
+    image = models.ImageField(upload_to="pizza/", storage=yandex_disk_storage)
     cost = models.IntegerField()
     about = models.TextField()
     hot = models.BooleanField(default=False)

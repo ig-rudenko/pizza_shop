@@ -68,8 +68,3 @@ services:
   # BACKEND для пиццы 2
   django-pizza2:
     <<: *backend
-
-
-  # BACKEND для пиццы 3
-  django-pizza3:
-    <<: *backend

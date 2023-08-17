@@ -1,3 +1,5 @@
+from concurrent.futures import ThreadPoolExecutor
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from .forms import PizzasAddForm, CreateOrderForm
@@ -7,10 +9,30 @@ from .cart import PizzaCart
 
 class PizzaListView(View):
     def get(self, request):
+
+        pizzas_list = []
+
+        with ThreadPoolExecutor() as executor:
+            for pizza in Pizza.objects.all():
+                executor.submit(self._add_pizza_data, pizza, pizzas_list)
+
         return render(
             request,
             "list_all.html",
-            {"pizzas": Pizza.objects.all(), "cart": PizzaCart(request)},
+            {"pizzas": pizzas_list, "cart": PizzaCart(request)},
+        )
+
+    @staticmethod
+    def _add_pizza_data(pizza: Pizza, pizzas_list: list):
+        pizzas_list.append(
+            {
+                "id": pizza.id,
+                "name": pizza.name,
+                "image_url": pizza.image.url,
+                "hot": pizza.hot,
+                "vegan": pizza.vegan,
+                "cost": pizza.cost,
+            }
         )
 
 

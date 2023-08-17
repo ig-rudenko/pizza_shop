@@ -5,3 +5,4 @@ djangorestframework-simplejwt
 django-debug-toolbar
 celery
 drf_yasg
+requests
